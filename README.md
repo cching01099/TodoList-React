@@ -33,6 +33,6 @@ todoList 實作功能
 
 ### 環境建構
 
-react 18.2.0
-Node.js 14.18.1
-npm 6.4.15
+- react 18.2.0
+- Node.js 14.18.1
+- npm 6.4.15
