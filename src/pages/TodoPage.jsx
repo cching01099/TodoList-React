@@ -93,6 +93,12 @@ const TodoPage = () => {
       });
     });
   };
+  //delete function (remember to use filter to get new todo array)
+  const handleDeleteTodo = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== id);
+    });
+  };
 
   const handleSave = ({ id, title }) => {
     setTodos((prevTodos) => {
@@ -125,8 +131,9 @@ const TodoPage = () => {
         onSave={handleSave}
         onToggleDone={handleToggleDone}
         onChangeMode={handleChangeMode}
+        onDelete={handleDeleteTodo}
       />
-      <Footer />
+      <Footer todos={todos} />
     </div>
   );
 };
