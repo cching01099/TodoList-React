@@ -8,16 +8,18 @@ import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { login, checkPermission } from '../api/auth';
 //引用提示訊息的套件（sweetalert2)
 import Swal from 'sweetalert2';
 //component轉址
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'contexts/AuthContext';
 
 const LoginPage = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  const { login, isAuthenticated } = useAuth();
 
   const handleClick = async () => {
     if (username.length === 0) {
@@ -27,12 +29,11 @@ const LoginPage = () => {
       return;
     }
 
-    const { success, authToken } = await login({
+    const success = await login({
       username,
       password,
     });
     if (success) {
-      localStorage.setItem('authToken', authToken);
       // 登入成功訊息的提示框
       Swal.fire({
         position: 'top',
@@ -41,8 +42,6 @@ const LoginPage = () => {
         icon: 'success',
         showConfirmButton: false,
       });
-      //註冊成功後導引到todos頁面
-      navigate('/todos');
       return;
     }
     // 登入失敗訊息的提示框
@@ -56,19 +55,10 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken');
-      if (!authToken) {
-        return;
-      }
-      const result = await checkPermission(authToken);
-      if (result) {
-        navigate('/todos');
-      }
-    };
-
-    checkTokenIsValid();
-  }, [navigate]);
+    if (isAuthenticated) {
+      navigate('/todos');
+    }
+  }, [navigate, isAuthenticated]);
 
   return (
     <AuthContainer>
